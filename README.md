@@ -23,22 +23,15 @@ Material-UI (MUI)
 Installation
 Clone the repository:
 
-bash
-Copy
-Edit
+
 git clone https://github.com/your-repo/srmap-campus-event-management-system.git
 cd srmap-campus-event-management-system
 Install dependencies:
 
-bash
-Copy
-Edit
+
 npm install
 Set up Firebase in src/firebase.js with your project configuration.
 
 Start the app:
 
-bash
-Copy
-Edit
 npm start
