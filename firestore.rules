@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow all operations for authenticated users
+    match /events/{eventId} {
+    allow create: if 
+      request.auth != null &&
+      request.resource.data.title is string &&
+      request.resource.data.description is string &&
+      request.resource.data.schedule.start is timestamp &&
+      request.resource.data.organizers.userId == request.auth.uid;
+      allow read, write: if request.auth != null;
+    }
+
+    match /volunteer_requests/{requestId} {
+      allow read, write: if request.auth != null;
+    }
+      // Applications subcollection
+    match /applications/{applicationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /attendees/{attendeeId}{
+      allow reas,write,create,update : if request.auth != null;
+    }
+
+    match /accommodations/{accommodationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Allow polls operations
+    match /polls/{pollId} {
+      allow read,update, write: if request.auth != null;
+    }
+
+    // Allow feedback operations
+    match /feedback/{feedbackId} {
+      allow read, write: if request.auth != null;
+    }
+    match /venues/{venueId} {
+
+      allow read, create, write: if request.auth != null;
+    }
+
+    match /issues/{issueId}
+    {
+      allow read, create, write: if request.auth != null;
+    }
+
+    match /venueBookings/{bookingId}
+    {
+      allow read, create, write: if request.auth != null;
+    }
+
+    match /accommodation_rooms/{roomId} {
+      allow read, create, write,update: if request.auth != null;
+    }
+    match /accommodationBookings/{bookingId} {
+      allow read, create, write,update: if request.auth != null;
+    }
+
+    match /attendance/{attendanceId} {
+      allow read, create, write,update: if request.auth != null;}
+  }
+}
