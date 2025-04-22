@@ -3,7 +3,7 @@ Description
 A web application to manage campus events at SRM University. It allows users to create, manage, and participate in events, with features like Google login, event scheduling, venue booking approval, and feedback submission.
 
 Features
-Google login using SRM Gmail.
+Google login using SRM Gmail only.
 
 Create and manage events.
 
@@ -19,6 +19,9 @@ React
 Firebase (Authentication and Firestore)
 
 Material-UI (MUI)
+
+Website Livelink:
+https://festi-flow-d1123.firebaseapp.com/login
 
 Installation
 Clone the repository:
