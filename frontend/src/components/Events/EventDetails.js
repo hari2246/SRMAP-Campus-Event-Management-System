@@ -372,9 +372,9 @@ export default function EventDetails() {
                       wordBreak: 'break-all'
                     }}
                   >
-                    <Typography variant="body2" color="text.secondary">
+                    {/* <Typography variant="body2" color="text.secondary">
                       URL: {`${window.location.origin}/events/${eventId}`}
-                    </Typography>
+                    </Typography> */}
                   </Box>
                 </Box>
               </DialogContent>
