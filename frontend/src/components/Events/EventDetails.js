@@ -7,9 +7,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../../services/firebase';
 import EventFeedback from '../Feedback/EventFeedback';
 import { QRCodeCanvas } from 'qrcode.react';
-// Update the import
 import QrReader from 'react-qr-scanner';
-import ReportIssue from '../Issues/ReportIssues';
 import ReportIssueInline from '../Issues/ReportIssues';
 
 import {
@@ -17,7 +15,6 @@ import {
   Paper, Divider, Box, Grid, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 
-// Add import at the top
 import FeedbackForm from '../Feedback/FeedbackForm';
 
 export default function EventDetails() {
@@ -97,7 +94,6 @@ export default function EventDetails() {
       if (!user || !eventId) return;
 
       try {
-        // Check attendance status
         const attendanceRef = doc(db, 'attendance', `${eventId}_${user.uid}`);
         const attendanceSnapshot = await getDoc(attendanceRef);
         setAttendanceSnap(attendanceSnapshot);
@@ -131,7 +127,6 @@ export default function EventDetails() {
 
         if (count > 0) setAverageRating((totalRating / count).toFixed(1));
 
-        // Update attendance count query
         const attendanceQuery = query(collection(db, 'attendance'), where('eventId', '==', eventId));
         const attendanceSnap = await getDocs(attendanceQuery);
         setTotalAttendees(attendanceSnap.size);
@@ -161,21 +156,16 @@ export default function EventDetails() {
   const handleScan = async (data) => {
     if (data) {
       try {
-        // For testing, log the scanned data
-        console.log('Scanned data:', data);
-        
         const auth = getAuth();
         const user = auth.currentUser;
         if (!user) throw new Error('User not logged in.');
 
-        // Check if attendance already exists
         const attendanceRef = doc(db, 'attendance', `${eventId}_${user.uid}`);
         const attendanceSnap = await getDoc(attendanceRef);
 
         if (attendanceSnap.exists()) {
           alert('Attendance already marked.');
         } else {
-          // Store attendance in the new attendance collection
           await setDoc(attendanceRef, {
             eventId: eventId,
             userId: user.uid,
@@ -196,42 +186,6 @@ export default function EventDetails() {
       }
     }
   };
-
-  // Update the QR scanner component
-  {scannerOpen && (
-    <Dialog open={scannerOpen} onClose={() => setScannerOpen(false)}>
-      <DialogTitle>Scan QR Code to Mark Attendance</DialogTitle>
-      <DialogContent>
-        <QrReader
-          onError={(error) => {
-            console.error('Scanner error:', error);
-            setScanningError(error?.message || 'Failed to scan QR code');
-          }}
-          onResult={(result, error) => {
-            if (result) {
-              handleScan(result?.text);
-            }
-            if (error) {
-              console.error('Scanner error:', error);
-              setScanningError(error.message);
-            }
-          }}
-          constraints={{ facingMode: 'user' }}
-          style={{ width: '100%' }}
-        />
-        {scanningError && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {scanningError}
-          </Alert>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setScannerOpen(false)} color="primary">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )}
 
   if (loading) {
     return (
@@ -431,28 +385,29 @@ export default function EventDetails() {
           )}
 
           {scannerOpen && !attendanceSnap?.exists() && (
-            <Dialog open={scannerOpen} onClose={() => setScannerOpen(false)}>
-              <DialogTitle>Scan QR Code to Mark Attendance</DialogTitle>
-              <DialogContent>
-                <QrReader
-                  delay={300}
-                  onError={(error) => setScanningError(error?.message)}
-                  onScan={handleScan}
-                  style={{ width: '100%' }}
-                  facingMode="user"
-                />
-                {scanningError && (
-                  <Alert severity="error" sx={{ mt: 2 }}>
-                    {scanningError}
-                  </Alert>
-                )}
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setScannerOpen(false)} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
+             <Dialog open={scannerOpen} onClose={() => setScannerOpen(false)}>
+             <DialogTitle>Scan QR Code to Mark Attendance</DialogTitle>
+             <DialogContent>
+               <QrReader
+                 onError={(error) => {
+                   console.error('Scanner error:', error);
+                   setScanningError(error?.message || 'Failed to scan QR code');
+                 }}
+                 onScan={handleScan}
+                 style={{ width: '100%' }}
+               />
+               {scanningError && (
+                 <Alert severity="error" sx={{ mt: 2 }}>
+                   {scanningError}
+                 </Alert>
+               )}
+             </DialogContent>
+             <DialogActions>
+               <Button onClick={() => setScannerOpen(false)} color="primary">
+                 Close
+               </Button>
+             </DialogActions>
+           </Dialog>
           )}
 
         </Grid>

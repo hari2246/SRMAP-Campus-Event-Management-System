@@ -4,11 +4,13 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { getAuth } from 'firebase/auth';
 
-export default function FeedbackForm({ eventId, onSubmit }) {
+export default function FeedbackForm({ eventId, onSubmit = () => {} }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [submittedFeedback, setSubmittedFeedback] = useState(null); // new state
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -19,7 +21,12 @@ export default function FeedbackForm({ eventId, onSubmit }) {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      
+
+      if (!user) {
+        setError('You must be logged in to submit feedback');
+        return;
+      }
+
       await addDoc(collection(db, 'feedback'), {
         eventId,
         userId: user.uid,
@@ -29,8 +36,15 @@ export default function FeedbackForm({ eventId, onSubmit }) {
         timestamp: new Date()
       });
 
-      onSubmit();
+      const feedbackData = { rating, comment }; // store submitted values
+
+      setSubmittedFeedback(feedbackData);
+      setSuccessMessage('Thank you for your feedback!');
+      setError('');
+      setRating(0);
+      setComment('');
       setShowForm(false);
+      onSubmit(); // safely call callback
     } catch (err) {
       setError('Failed to submit feedback: ' + err.message);
     }
@@ -38,15 +52,34 @@ export default function FeedbackForm({ eventId, onSubmit }) {
 
   return (
     <Box sx={{ mt: 2 }}>
-      {!showForm ? (
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={() => setShowForm(true)}
-        >
-          Give Feedback
-        </Button>
+      {submittedFeedback ? (
+        <>
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {successMessage}
+          </Alert>
+          <Typography variant="h6">Your Submitted Feedback</Typography>
+          <Rating value={submittedFeedback.rating} readOnly sx={{ mb: 1 }} />
+          <Typography variant="body1">{submittedFeedback.comment}</Typography>
+        </>
+      ) : !showForm ? (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() => {
+              setSuccessMessage('');
+              setShowForm(true);
+            }}
+          >
+            Give Feedback
+          </Button>
+          {successMessage && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {successMessage}
+            </Alert>
+          )}
+        </>
       ) : (
         <>
           <Typography gutterBottom>Rate your experience</Typography>
