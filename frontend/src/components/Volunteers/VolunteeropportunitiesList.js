@@ -60,12 +60,14 @@ export default function VolunteerOpportunitiesList() {
 
   return (
     <Container sx={{ backgroundColor: '#f5f5f5', padding: '2rem', borderRadius: '8px' }}>
-      <Typography variant="h4" gutterBottom>
-        Your Volunteer Requests
+      <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 4 }}>
+        Available Volunteer Opportunities
       </Typography>
 
       {opportunities.length === 0 ? (
-        <Typography>No volunteer opportunities created yet.</Typography>
+        <Typography variant="h6" sx={{ textAlign: 'center' }}>
+          No volunteer opportunities created yet.
+        </Typography>
       ) : (
         <List>
           {opportunities.map(op => (
@@ -73,6 +75,7 @@ export default function VolunteerOpportunitiesList() {
               button
               key={op.id}
               onClick={() => navigate(`/volunteer-requests/${op.id}/applications`)}
+              sx={{ mb: 2 }}
             >
               <ListItemText
                 primary={op.title}

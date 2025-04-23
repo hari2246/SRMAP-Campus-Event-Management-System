@@ -1,4 +1,3 @@
-// src/components/Volunteers/VolunteerApplication.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
@@ -25,6 +24,7 @@ export default function VolunteerApplication() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState('');
   const [hasApplied, setHasApplied] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState('');
 
   useEffect(() => {
     const fetchRequest = async () => {
@@ -42,8 +42,11 @@ export default function VolunteerApplication() {
         
         // Check if user already applied
         if (auth.currentUser) {
-          const hasApplied = data.applications?.some(app => app.userId === auth.currentUser.uid);
-          setHasApplied(hasApplied);
+          const appliedData = data.applications?.find(app => app.userId === auth.currentUser.uid);
+          if (appliedData) {
+            setHasApplied(true);
+            setApplicationStatus(appliedData.status);  // Show current status of the application
+          }
         }
       } catch (err) {
         setError('Failed to load volunteer opportunity');
@@ -78,7 +81,7 @@ export default function VolunteerApplication() {
           userId: auth.currentUser.uid,
           ...formData,
           appliedAt: new Date(),
-          status: 'pending'
+          status: 'pending' // Set initial status as 'pending'
         })
       });
 
@@ -93,6 +96,7 @@ export default function VolunteerApplication() {
       // Reset form and update state
       setFormData({ motivation: '', relevantExperience: '' });
       setHasApplied(true);
+      setApplicationStatus('pending'); // Show 'pending' status immediately after applying
       alert('Application submitted successfully!');
 
     } catch (err) {
@@ -129,7 +133,7 @@ export default function VolunteerApplication() {
 
       {hasApplied ? (
         <Alert severity="success" sx={{ mb: 2 }}>
-          You've already applied to this opportunity. We'll contact you if selected.
+          You've already applied to this opportunity. Your application status is: <strong>{applicationStatus}</strong>.
         </Alert>
       ) : (
         <Box component="form" onSubmit={handleSubmit}>

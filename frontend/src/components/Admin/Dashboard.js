@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       });
 
       // Fetch pending items (events, venue requests)
-      const pendingEventsQuery = query(collection(db, 'events'), where('approval', '==', 'pending'));
+      const pendingEventsQuery = query(collection(db, 'events'), where('approval.status', '==', 'pending'));
       const venueRequestsQuery = query(collection(db, 'venueBookings'), where('approval', '==', 'pending'));
 
       const pendingEventsSnap = await getDocs(pendingEventsQuery);

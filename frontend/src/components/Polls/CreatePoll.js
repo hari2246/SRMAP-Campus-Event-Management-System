@@ -61,7 +61,15 @@ export default function CreatePoll() {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container
+      maxWidth="md"
+      sx={{
+        backgroundColor: '#f4f6f8', // Set a light background color
+        padding: 4, // Add padding
+        borderRadius: 2, // Optional: rounded corners
+        boxShadow: 2, // Optional: shadow effect
+      }}
+    >
       <Typography variant="h4" gutterBottom>Create New Poll</Typography>
       <Box component="form" onSubmit={handleSubmit}>
         <TextField
