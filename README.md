@@ -27,7 +27,7 @@ Installation
 Clone the repository:
 
 
-git clone https://github.com/your-repo/srmap-campus-event-management-system.git
+git clone https://github.com/hari2246/srmap-campus-event-management-system.git
 cd srmap-campus-event-management-system
 Install dependencies:
 
