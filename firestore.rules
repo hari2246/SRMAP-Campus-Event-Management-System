@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ⚠️ TEMPORARY: Allow all read/write for demo or recruiter testing
+    // ---------------------------------------------------------------
+    // This makes all collections publicly readable/writable.
+    // Use ONLY for local testing or demo environments.
+    // ---------------------------------------------------------------
+
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
