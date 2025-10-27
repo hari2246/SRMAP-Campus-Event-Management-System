@@ -156,6 +156,9 @@ export default function LoginPage() {
         <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
           *For testing purposes only — allows login without Google authentication.
         </Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+          Please try again after refreshing multiple times if not logged in.
+        </Typography>
 
         <TextField
           label="Email"
